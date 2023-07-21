@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -45,20 +46,24 @@ public class ApplicationUser implements UserDetails{
 			inverseJoinColumns = {@JoinColumn(name="role_id")}
 			)
 	private Set<Role> authorities;
-
-
+	
+	@OneToOne
+	@JoinColumn(name="token_id")
+	private UserTokens userToken;
+	
 	public ApplicationUser() {
 		super();
 		this.authorities=new HashSet<>();
 	}
 	
-	public ApplicationUser(Integer userId, String username, String email, String password,Boolean isEmailVerified, Set<Role> authorities) {
+	public ApplicationUser(Integer userId, String username, String email, String password,Boolean isEmailVerified,UserTokens userToken, Set<Role> authorities) {
 		super();
 		this.userId = userId;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.isEmailVerified=isEmailVerified;
+		this.userToken=userToken;
 		this.authorities = authorities;
 	}
 	
@@ -71,11 +76,21 @@ public class ApplicationUser implements UserDetails{
 //	}
 
 
+	
+	
 	public Integer getUserId() {
 		return this.userId;
 	}
 
 
+
+	public UserTokens getUserTokens() {
+		return userToken;
+	}
+
+	public void setUserTokens(UserTokens userToken) {
+		this.userToken = userToken;
+	}
 
 	public Boolean getIsEmailVerified() {
 		return this.isEmailVerified;

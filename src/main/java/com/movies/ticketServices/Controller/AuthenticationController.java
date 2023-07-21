@@ -14,6 +14,7 @@ import com.movies.ticketServices.Model.DTO.LoginDTO;
 import com.movies.ticketServices.Model.DTO.LoginResponseDTO;
 import com.movies.ticketServices.Model.DTO.RegistrationDTO;
 import com.movies.ticketServices.Model.DTO.RegistrationResponseDTO;
+import com.movies.ticketServices.Model.DTO.ResponceDTO;
 import com.movies.ticketServices.Services.AuthenticationService;
 
 @RestController
@@ -42,13 +43,25 @@ public class AuthenticationController {
 		
 		return "";
 	}
+	
+	@GetMapping("/requestpasswordresetlink")
+	public ResponceDTO resetPassword(@RequestParam("email") String email) {
+		if(email!=null) {
+			return authenticationService.requestPasswordResetLink(email);
+			//return new ResponceDTO("Success!!","Reset link has been sent to your registered email");
+			
+		}else {
+			return new ResponceDTO("Failed!!","Failed to send Reset link");
+		}
+		
+	}
 
 	@PostMapping("/login")
 	public LoginResponseDTO loginUser(@RequestBody LoginDTO body) {
 		//System.out.println(body.getUsername()+" "+body.getPassword());//"Registration Failed","Please Enter all fields"
 		
 		if(body.getEmail()==null||body.getPassword()==null) {
-			return new LoginResponseDTO(new ApplicationUser(0,"Login Failed","Please Fill All Details","",false,null),"");
+			return new LoginResponseDTO(new ApplicationUser(0,"Login Failed","Please Fill All Details","",false,null,null),"");
 		}
 		return authenticationService.loginUser(body);
 	}

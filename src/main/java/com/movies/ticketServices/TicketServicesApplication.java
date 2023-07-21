@@ -11,7 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.movies.ticketServices.Model.ApplicationUser;
 import com.movies.ticketServices.Model.Role;
+import com.movies.ticketServices.Model.UserTokens;
 import com.movies.ticketServices.Repository.RoleRepository;
+import com.movies.ticketServices.Repository.TokensRepository;
 import com.movies.ticketServices.Repository.UserRepository;
 
 @SpringBootApplication
@@ -22,7 +24,7 @@ public class TicketServicesApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(RoleRepository roleRepository,UserRepository userRepository,PasswordEncoder passwordEncoder) {
+	CommandLineRunner run(RoleRepository roleRepository,UserRepository userRepository,PasswordEncoder passwordEncoder,TokensRepository tokensRepository) {
 		return args ->{
 			if(roleRepository.findByAuthority("ADMIN").isPresent())
 				return;
@@ -31,8 +33,8 @@ public class TicketServicesApplication {
 
 			Set<Role> roles=new HashSet<>();
 			roles.add(adminRole);
-
-			ApplicationUser admin=new ApplicationUser(1,"admin","admin@gmail.com",passwordEncoder.encode("Abcd@1234"),false,roles);
+			UserTokens token=tokensRepository.save(new UserTokens(0,null,null,null,null,null,null));
+			ApplicationUser admin=new ApplicationUser(1,"admin","admin@gmail.com",passwordEncoder.encode("Abcd@1234"),false,token,roles);
 			userRepository.save(admin);
 		};
 	}

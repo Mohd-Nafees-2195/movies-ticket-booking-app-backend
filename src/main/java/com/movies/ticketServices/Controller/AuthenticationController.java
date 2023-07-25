@@ -1,6 +1,7 @@
 package com.movies.ticketServices.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,9 @@ public class AuthenticationController {
 
 	@Autowired
 	private AuthenticationService authenticationService;
+	
+	@Autowired
+	private JavaMailSender javaMailSender;
 
 //	@PostMapping("/register")
 //	public ApplicationUser registerUser(@RequestBody RegistrationDTO body) {
@@ -38,20 +42,15 @@ public class AuthenticationController {
 		return authenticationService.registerUser(body.getUsername(),body.getEmail(),body.getPassword());
 	}
 	
-	@GetMapping("/verifyEmail")
-	public String verifyEmail(@RequestParam("token") String token) {
-		
-		return "";
-	}
 	
-	@GetMapping("/requestpasswordresetlink")
+	@PostMapping("/requestpasswordresetotp")
 	public ResponceDTO resetPassword(@RequestParam("email") String email) {
 		if(email!=null) {
-			return authenticationService.requestPasswordResetLink(email);
+			return authenticationService.requestPasswordResetOTP(email);
 			//return new ResponceDTO("Success!!","Reset link has been sent to your registered email");
 			
 		}else {
-			return new ResponceDTO("Failed!!","Failed to send Reset link");
+			return new ResponceDTO("Failed!!","Invalid Email");
 		}
 		
 	}
@@ -64,5 +63,15 @@ public class AuthenticationController {
 			return new LoginResponseDTO(new ApplicationUser(0,"Login Failed","Please Fill All Details","",false,null,null),"");
 		}
 		return authenticationService.loginUser(body);
+	}
+	
+	@PostMapping("/logout")
+	public ResponceDTO logout(@RequestParam("email") String email) {
+		if(email!=null) {
+		return	authenticationService.logout(email);
+		}else {
+			return new ResponceDTO("Failed!!","Invalid Email");
+		}
+		
 	}
 }

@@ -4,12 +4,14 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,10 +31,13 @@ import com.movies.ticketServices.Repository.RoleRepository;
 import com.movies.ticketServices.Repository.TokensRepository;
 import com.movies.ticketServices.Repository.UserRepository;
 
+import jakarta.mail.internet.MimeMessage;
+
 @Service
 @Transactional
 public class AuthenticationService {
 
+	Random random=new Random(1000);
 	@Autowired
 	private UserRepository userRepository;
 
@@ -93,7 +98,8 @@ public class AuthenticationService {
 
 			
 			String token=tokenService.generateJwt(auth);
-			
+			user.setIsEmailVerified(true);
+			userRepository.save(user);
 			saveJWTTokens(token,user);
 			
 			return new LoginResponseDTO(userRepository.findByEmail(body.getEmail()).get(),token);
@@ -116,21 +122,59 @@ public class AuthenticationService {
 	//Password reset services
 	
 	//Request link for password reser
-	public ResponceDTO requestPasswordResetLink(String email) {
-		ApplicationUser user= userRepository.findByEmail(email).get(); 
-		if(user!=null) {
-//			String token=tokenService.generatePasswordResetToken();
-			String token=tokenService.generateToken();
-			UserTokens userToken=user.getUserTokens();
-			userToken.setPasswordResetToken(token);
-			userToken.setExpiryTimePRT(LocalDateTime.now().plusHours(1));
-			tokensRepository.save(userToken);
-			sendResetLink(email,token);
-			return new ResponceDTO("Success!!","Reset link has been sent to your registered email");
-		}else {
-			return new ResponceDTO("Failed!!","Invalid User Email");
+	public ResponceDTO requestPasswordResetOTP(String email) {
+		
+		try {
+			ApplicationUser user= userRepository.findByEmail(email).get(); 
+			if(user!=null) {
+				SimpleMailMessage simpleMailMessage=new SimpleMailMessage();
+				simpleMailMessage.setTo(email);
+				simpleMailMessage.setSubject("Password Reset Request");
+				simpleMailMessage.setText("Click the link below to reset your password");
+				
+//				MimeMessage mimeMessage=javaMailSender.createMimeMessage();
+//				MimeMessageHelper mimeMessageHelper=new MimeMessageHelper(mimeMessage);
+//				mimeMessageHelper.setTo(email);
+//				mimeMessageHelper.setSubject("Reset Password");
+//				mimeMessageHelper.setText(
+//						
+//						"""
+//						  <div>
+//						    <a href="https://localhost:8081/auth/requestpasswordresetotp?email=%s" target="_blank">Reset Password</a>
+//
+//						  </div>
+//						""".formatted(email),true
+//						
+//						);
+//				
+				
+				//String token=tokenService.generatePasswordResetToken();
+				System.out.println("Email = "+email);
+				//Generating OTP Of 4 Digit
+				
+				int otp=random.nextInt(999999);
+				System.out.println("OTP = "+otp);
+				javaMailSender.send(simpleMailMessage);
+				//String token=tokenService.generateToken();
+				UserTokens userToken=user.getUserTokens();
+//				userToken.setPasswordResetToken(token);
+//				userToken.setExpiryTimePRT(LocalDateTime.now().plusHours(1));
+				//tokensRepository.save(userToken);
+				//sendResetLink(email,token);
+				return new ResponceDTO("Success!!","Reset link has been sent to your registered email");
+			}else {
+				
+				return new ResponceDTO("Failed!!","Invalid User Email");
+			}
+		}catch(NoSuchElementException e) {
+			return new ResponceDTO("Failed!!","Invalid User");
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponceDTO("Failed!!","Something Went Wrong");
 		}
+		
 	}
+	
 	public void sendResetLink(String email,String token) {
 		String resetLink="http://localhost:8081/auth/resetpassword?token="+token;
 		String subject = "Password Reset Request";
@@ -141,7 +185,27 @@ public class AuthenticationService {
 		message.setSubject(subject);
 		message.setText(body);
 		
+		System.out.println(email+" Before ");
 		javaMailSender.send(message);
+		
+		System.out.println(email+" jsdnj djndin jwendjnd ");
+	}
+	
+	public ResponceDTO logout(String email) {
+		try {
+			ApplicationUser user = userRepository.findByEmail(email).get();
+		    if (user != null ) {
+		        // Reset the password && user.getResetToken().equals(token) && user.getResetTokenExpiryTime().isAfter(LocalDateTime.now())
+		        user.setIsEmailVerified(false);
+		        userRepository.save(user);
+		        return new ResponceDTO("Success!!","Logout Successfull");
+		    } else {
+		    	return new ResponceDTO("Failed!!","Invalid Email");
+		    }
+		}catch(Exception e) {
+			return new ResponceDTO("Failed!!",e.getMessage());
+		}
+	    
 	}
 
 }

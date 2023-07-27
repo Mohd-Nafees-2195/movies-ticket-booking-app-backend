@@ -5,7 +5,7 @@ public class EmailDTO {
 	private String to;
 	private String subject;
 	private String text;
-	
+
 	public String getTo() {
 		return to;
 	}
@@ -24,7 +24,7 @@ public class EmailDTO {
 	public void setText(String text) {
 		this.text = text;
 	}
-	
-	
-	
+
+
+
 }

@@ -19,8 +19,8 @@ public class MailConfiguration {
 	private String mailUsername;
 	@Value("${spring.mail.password}")
 	private String mailPassword;
-	
-	
+
+
 	@Bean
 	public JavaMailSender getJavaMailSender() {
 		JavaMailSenderImpl javaMailSender=new JavaMailSenderImpl();
@@ -28,10 +28,10 @@ public class MailConfiguration {
 		javaMailSender.setPort(Integer.parseInt(mailPort));
 		javaMailSender.setUsername(mailUsername);
 		javaMailSender.setPassword(mailPassword);
-		
+
 		Properties props=javaMailSender.getJavaMailProperties();
 		props.put("mail.smtp.starttls.enable", "true");
-		
+
 		return javaMailSender;
 	}
 }

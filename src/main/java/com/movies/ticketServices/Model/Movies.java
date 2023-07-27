@@ -19,14 +19,18 @@ public class Movies {
 	
 	@Column(name="movie_name")
 	private String movieName;
-	
+
 	@Column(name="movie_title")
 	private String movieTitle;
+
+	@Column(name="theatre_id")
+	private Integer theatetId;
 	
 	@Lob
 	private byte[] imageData;
 	
-	
+
+
 
 	public Movies() {
 		super();
@@ -34,12 +38,25 @@ public class Movies {
 
 
 
-	public Movies(Integer movieId, String movieName, String movieTitle, byte[] imageData) {
+	public Movies(Integer movieId, String movieName, String movieTitle,Integer theatetId ,byte[] imageData) {
 		super();
 		this.movieId = movieId;
 		this.movieName = movieName;
 		this.movieTitle = movieTitle;
+		this.theatetId=theatetId;
 		this.imageData = imageData;
+	}
+
+
+
+	public Integer getTheatetId() {
+		return theatetId;
+	}
+
+
+
+	public void setTheatetId(Integer theatetId) {
+		this.theatetId = theatetId;
 	}
 
 
@@ -89,7 +106,7 @@ public class Movies {
 	public void setImageData(byte[] imageData) {
 		this.imageData = imageData;
 	}
-	
-	
-	
+
+
+
 }

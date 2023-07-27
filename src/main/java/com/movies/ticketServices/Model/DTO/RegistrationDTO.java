@@ -18,18 +18,18 @@ public class RegistrationDTO {
 //		this.username = username;
 //		this.password = password;
 //	}
-	
-	
+
+
 	public RegistrationDTO(String username, String email, String password) {
 		super();
 		this.username = username;
 		this.email = email;
 		this.password = password;
 	}
-	
-	
-	
-	
+
+
+
+
 	public String getEmail() {
 		return email;
 	}

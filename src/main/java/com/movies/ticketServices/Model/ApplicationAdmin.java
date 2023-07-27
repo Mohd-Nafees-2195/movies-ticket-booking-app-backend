@@ -20,9 +20,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="user_tbl")
-public class ApplicationUser implements UserDetails{
-
+@Table(name="admin_tbl")
+public class ApplicationAdmin implements UserDetails{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,7 +40,7 @@ public class ApplicationUser implements UserDetails{
 
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(
-			name="user_role_juction",
+			name="admin_role_juction",
 			joinColumns = {@JoinColumn(name="user_id")},
 			inverseJoinColumns = {@JoinColumn(name="role_id")}
 			)
@@ -49,60 +48,49 @@ public class ApplicationUser implements UserDetails{
 
 	@OneToOne
 	@JoinColumn(name="token_id")
-	private UserTokens userToken;
-
-	public ApplicationUser() {
+	private AdminTokens adminToken;
+	
+	
+	
+	public ApplicationAdmin() {
 		super();
 		this.authorities=new HashSet<>();
 	}
+	
+	
 
-	public ApplicationUser(Integer userId, String username, String email, String password,Boolean isEmailVerified,UserTokens userToken, Set<Role> authorities) {
+	public ApplicationAdmin(Integer userId, String username, String email, String password, Boolean isEmailVerified,
+			 AdminTokens adminToken,Set<Role> authorities) {
 		super();
 		this.userId = userId;
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.isEmailVerified=isEmailVerified;
-		this.userToken=userToken;
-		this.authorities = authorities;
-	}
-
-//
-//	public ApplicationUser(Integer userId,String userName,String password, Set<Role> authorises) {
-//		this.userId=userId;
-//		this.username=userName;
-//		this.password=password;
-//		this.authorities=authorises;
-//	}
-
-
-
-
-	public Integer getUserId() {
-		return this.userId;
-	}
-
-
-
-	public UserTokens getUserTokens() {
-		return userToken;
-	}
-
-	public void setUserTokens(UserTokens userToken) {
-		this.userToken = userToken;
-	}
-
-	public Boolean getIsEmailVerified() {
-		return this.isEmailVerified;
-	}
-
-	public void setIsEmailVerified(Boolean isEmailVerified) {
 		this.isEmailVerified = isEmailVerified;
+		this.authorities = authorities;
+		this.adminToken = adminToken;
 	}
+
+	
+	
+	
+	
+	public Integer getUserId() {
+		return userId;
+	}
+
+
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+
 
 	public String getEmail() {
 		return email;
 	}
+
 
 
 	public void setEmail(String email) {
@@ -110,33 +98,59 @@ public class ApplicationUser implements UserDetails{
 	}
 
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+
+	public Boolean getIsEmailVerified() {
+		return isEmailVerified;
 	}
 
-	public void setAuthorities(Set<Role> authorities) {
-		this.authorities=authorities;
+
+
+	public void setIsEmailVerified(Boolean isEmailVerified) {
+		this.isEmailVerified = isEmailVerified;
 	}
+
+
+
+	public AdminTokens getUserToken() {
+		return adminToken;
+	}
+
+
+
+	public void setUserToken(AdminTokens adminToken) {
+		this.adminToken = adminToken;
+	}
+
+
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+
+	public void setAuthorities(Set<Role> authorities) {
+		this.authorities = authorities;
+	}
+
+
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		return this.authorities;
-	}
-
-
-	public void setPassword(String password) {
-		this.password=password;
+		return null;
 	}
 
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
 		return this.password;
-	}
-
-	public void setUsername(String userName) {
-		this.username=userName;
 	}
 
 	@Override
@@ -154,7 +168,7 @@ public class ApplicationUser implements UserDetails{
 	@Override
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	@Override
@@ -168,5 +182,4 @@ public class ApplicationUser implements UserDetails{
 		// TODO Auto-generated method stub
 		return true;
 	}
-
 }

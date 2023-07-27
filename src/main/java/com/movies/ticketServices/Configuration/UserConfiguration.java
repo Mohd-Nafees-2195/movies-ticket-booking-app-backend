@@ -6,7 +6,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -48,9 +47,10 @@ public class UserConfiguration {
 	public AuthenticationManager authManager(UserDetailsService userDetailsService) {
 		DaoAuthenticationProvider daoProvider=new DaoAuthenticationProvider();
 		daoProvider.setUserDetailsService(userDetailsService);
-		daoProvider.setPasswordEncoder(passwordEncoder()); 
+		daoProvider.setPasswordEncoder(passwordEncoder());
 		return new ProviderManager(daoProvider);
 	}
+
 
 
 
@@ -63,13 +63,13 @@ public class UserConfiguration {
     				auth.requestMatchers("/user/**").hasAnyRole("ADMIN","USER");
     				auth.anyRequest().authenticated();
     			});
-    	 
+
     	  http.oauth2ResourceServer()
     			   .jwt()
     			   .jwtAuthenticationConverter(jwtAuthenticationConverter());
-    	  
+
     	  http.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-    	  
+
     	  return http.build();
     }
 
@@ -85,8 +85,8 @@ public class UserConfiguration {
 		return new NimbusJwtEncoder(jwks);
 
 	}
-	
-	
+
+
 	@Bean
 	public JwtAuthenticationConverter jwtAuthenticationConverter() {
 		JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter=new JwtGrantedAuthoritiesConverter();

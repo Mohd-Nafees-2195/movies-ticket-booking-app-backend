@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TokenService {
-	
+
 	private static final int TOKEN_LENGTH=16;
 
 	@Autowired
@@ -42,14 +42,14 @@ public class TokenService {
 
 		return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 	}
-	
+
 	public String generatePasswordResetToken() {
 		SecureRandom secureRandom=new SecureRandom();
 		byte[] randomeBytes=new byte[TOKEN_LENGTH];
 		secureRandom.nextBytes(randomeBytes);
 		return Base64.getUrlEncoder().withoutPadding().encodeToString(randomeBytes);
 	}
-	
+
 	 public String generateToken() {
 	        return UUID.randomUUID().toString();
 	    }

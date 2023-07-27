@@ -10,8 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="tokens_tbl")
-public class UserTokens {
+@Table(name="admin_tokens_tbl")
+public class AdminTokens {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -39,15 +39,16 @@ public class UserTokens {
 	private String emailVerificationToken;
 	@Column(name="evt_expire_time")
 	private LocalDateTime expiryTimeEVT;
-
-
-	public UserTokens() {
+	
+	
+	
+	public AdminTokens() {
 		super();
 	}
 
 
 
-	public UserTokens(Integer tokenId, String jWTToken, LocalDateTime expiryTimeJWTToken, String passwordResetToken,
+	public AdminTokens(Integer tokenId, String jWTToken, LocalDateTime expiryTimeJWTToken, String passwordResetToken,
 			LocalDateTime expiryTimePRT, String emailVerificationToken, LocalDateTime expiryTimeEVT) {
 		super();
 		this.tokenId = tokenId;
@@ -143,6 +144,6 @@ public class UserTokens {
 		this.expiryTimeEVT = expiryTimeEVT;
 	}
 
-
-
+	
+	
 }

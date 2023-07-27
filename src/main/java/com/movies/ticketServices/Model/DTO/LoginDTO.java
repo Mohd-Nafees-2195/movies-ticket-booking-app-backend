@@ -4,9 +4,9 @@ public class LoginDTO {
 
 	private String email;
 	private String password;
-	
-	
-	
+
+
+
 	public LoginDTO() {
 		super();
 	}
@@ -37,6 +37,6 @@ public class LoginDTO {
 	public String toString() {
 		return "LoginDTO [email=" + email + ", password=" + password + "]";
 	}
-	
-	
+
+
 }

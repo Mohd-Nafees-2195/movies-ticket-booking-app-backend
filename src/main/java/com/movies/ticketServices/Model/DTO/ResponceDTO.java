@@ -1,12 +1,12 @@
 package com.movies.ticketServices.Model.DTO;
 
 public class ResponceDTO {
-	
+
 	private String message;
 	private String reason;
-	
-	
-	
+
+
+
 	public String getMessage() {
 		return message;
 	}
@@ -42,7 +42,7 @@ public class ResponceDTO {
 		this.message = message;
 		this.reason = reason;
 	}
-	
-	
+
+
 
 }

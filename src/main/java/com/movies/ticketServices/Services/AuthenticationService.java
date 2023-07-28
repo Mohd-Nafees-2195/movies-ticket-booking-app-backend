@@ -24,6 +24,7 @@ import com.movies.ticketServices.Model.ApplicationUser;
 import com.movies.ticketServices.Model.Role;
 import com.movies.ticketServices.Model.UserTokens;
 import com.movies.ticketServices.Model.DTO.LoginDTO;
+import com.movies.ticketServices.Model.DTO.LoginResponseAdminDTO;
 import com.movies.ticketServices.Model.DTO.LoginResponseDTO;
 import com.movies.ticketServices.Model.DTO.RegistrationResponseDTO;
 import com.movies.ticketServices.Model.DTO.ResponceDTO;
@@ -90,7 +91,7 @@ public class AuthenticationService {
 	 
 	 
 
-	//Registration Service
+	//User Registration Service
  public RegistrationResponseDTO registerUser(String username,String email,String password) {
 
 		String encodedPassword=passwordEncoder.encode(password);
@@ -102,7 +103,6 @@ public class AuthenticationService {
 
 		Optional<ApplicationUser> getUserDetails=userRepository.findByEmail(email);
 			if(getUserDetails.isEmpty()) {
-				//System.out.println("Not Empty");
 				//String emailVerificationToken=UUID.randomUUID().toString();
 				UserTokens tokens=tokensRepository.save(new UserTokens(0,null,null,null,null,null,null));
 				userRepository.save(new ApplicationUser(0,username,email,encodedPassword,false,tokens,authorities));
@@ -111,8 +111,44 @@ public class AuthenticationService {
 				return new RegistrationResponseDTO("Registration Failed","user Already Exit");
 			}
 	}
+ 
+//Admin Login Service
+//public LoginResponseAdminDTO loginAdmin(LoginDTO body) {
+//		try {
+//
+//			//String encodedPassword=passwordEncoder.encode(password);
+//			System.out.println("Before Authentication");
+//
+//			ApplicationAdmin admin= adminRepository.findByEmail(body.getEmail()).get();
+//
+//			Authentication auth=authenticationManager.authenticate(
+//					new UsernamePasswordAuthenticationToken(admin.getUsername(), body.getPassword())
+//					);
+//
+//
+//			String token=tokenService.generateJwt(auth);
+//			System.out.println(token+" Here ");
+//			admin.setIsEmailVerified(true);
+//			adminRepository.save(admin);
+//			saveAdminJWTTokens(token,admin);
+//
+//			return new LoginResponseAdminDTO(adminRepository.findByEmail(body.getEmail()).get(),token);
+//
+//		}catch(NoSuchElementException e) {
+//			return new LoginResponseAdminDTO(new ApplicationAdmin(0,"Login Failed","Usr Not Found!! Please Register First","",false,null,null),"");
+//		}catch(AuthenticationException e) {
+//			return new LoginResponseAdminDTO(new ApplicationAdmin(0,"Login Failed","Incorrect Email or Password","",false,null,null),"");
+//		}
+//	}
+// public void saveAdminJWTTokens(String token,ApplicationAdmin admin) {
+//	 AdminTokens adminTokens=admin.getUserToken();
+//	 adminTokens.setJWTToken(token);
+//	 adminTokens.setExpiryTimeJWTToken(LocalDateTime.now().plusDays(1));
+//	 adminTokenRepository.save(adminTokens);
+// }
 
-	//Login Service
+
+	//User Login Service
 
 	public LoginResponseDTO loginUser(LoginDTO body) {
 		try {

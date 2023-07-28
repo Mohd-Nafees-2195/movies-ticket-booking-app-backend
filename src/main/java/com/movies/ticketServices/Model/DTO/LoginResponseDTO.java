@@ -10,7 +10,7 @@ public class LoginResponseDTO {
 	public LoginResponseDTO() {
 		super();
 	}
-
+ 
 	public LoginResponseDTO(ApplicationUser user, String jwt) {
 		super();
 		this.user = user;

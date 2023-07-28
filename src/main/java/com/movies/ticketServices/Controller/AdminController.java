@@ -43,7 +43,7 @@ public class AdminController {
 	@PostMapping("/insert-movie")
 	@ResponseBody
 	public ResponceDTO insertNewMovie(MoviesDTO newMovie,@RequestParam("file") MultipartFile file) {
-		System.out.println(newMovie.getMovieName()+" /// "+newMovie.getMovieTitle());
+		//System.out.println(newMovie.getMovieName()+" /// "+newMovie.getMovieTitle());
 		if(newMovie.getMovieName()!=null&&newMovie.getMovieTitle()!=null&&newMovie.getEmail()!=null) {
 			try {
 				byte[] imageData=file.getBytes();
@@ -61,34 +61,13 @@ public class AdminController {
 	//Adding new Theater
 	@PostMapping("/insert-theater")
 	public ResponceDTO insertNewTheatre(@RequestBody TheatreDTO theater) {
+		
 		if(theater.getEmail()==null||theater.getTheatreCity()==null||theater.getTheatreName()==null||theater.getTotalSeats()<=0) {
 			return new ResponceDTO("Failed!!","Some fields are missing");
 		}else {
-			adminServices.insertNewTheatre(theater);
+			return adminServices.insertNewTheatre(theater);
 		}
-		return new ResponceDTO("","");
+		
 	}
 	
-//	@PostMapping("/insert/{movieName}/{movieTitle}")
-//	public ResponceDTO insertNewMovie(@PathVariable("movieName") String movieName ,@PathVariable("movieTitle") String movieTitle,@RequestParam("file") MultipartFile file) {
-//		
-//		System.out.println(movieName+" /// "+movieTitle+" ");
-//		if(movieName!=null&&movieTitle!=null) {
-//			try {
-//				if(file!=null){
-//					Movies newMovie=new Movies(0,movieName,movieTitle,file.getBytes());
-//					return movieServices.insertNewMovie(newMovie);
-//				}else {
-//					return new ResponceDTO("Failed!!","Please select a file");
-//				}
-//				
-//			}catch(IOException e) {
-//				return new ResponceDTO("Failed!!",e.getMessage());
-//			}
-//			//return new ResponceDTO("Failed!!","Something Went Wrong");
-//		}
-//		else {
-//			return new ResponceDTO("Failed!!","Something Went Wrong");
-//		}
-//	}
 }

@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.movies.ticketServices.Model.ApplicationAdmin;
 import com.movies.ticketServices.Model.ApplicationUser;
 import com.movies.ticketServices.Model.DTO.LoginDTO;
+import com.movies.ticketServices.Model.DTO.LoginResponseAdminDTO;
 import com.movies.ticketServices.Model.DTO.LoginResponseDTO;
 import com.movies.ticketServices.Model.DTO.RegistrationDTO;
 import com.movies.ticketServices.Model.DTO.RegistrationResponseDTO;
@@ -33,13 +35,13 @@ public class AuthenticationController {
 //		return authenticationService.registerUser(body.getUsername(),body.getPassword());
 //	}
 
-	@PostMapping("/register-admin")
-	public RegistrationResponseDTO registerAdmin(@RequestBody RegistrationDTO body) {
-		if(body.getUsername()==null||body.getEmail()==null||body.getPassword()==null) {
-			return new RegistrationResponseDTO("Registration Failed","Please Enter all fields");
-		}
-		return authenticationService.registerAdmin(body.getUsername(),body.getEmail(),body.getPassword());
-	}
+//	@PostMapping("/register-admin")
+//	public RegistrationResponseDTO registerAdmin(@RequestBody RegistrationDTO body) {
+//		if(body.getUsername()==null||body.getEmail()==null||body.getPassword()==null) {
+//			return new RegistrationResponseDTO("Registration Failed","Please Enter all fields");
+//		}
+//		return authenticationService.registerAdmin(body.getUsername(),body.getEmail(),body.getPassword());
+//	}
 	
 	@PostMapping("/register")
 	public RegistrationResponseDTO registerUser(@RequestBody RegistrationDTO body) {
@@ -71,6 +73,16 @@ public class AuthenticationController {
 		}
 		return authenticationService.loginUser(body);
 	}
+	
+//	@PostMapping("/admin-login")
+//	public LoginResponseAdminDTO loginAdmin(@RequestBody LoginDTO body) {
+//		//System.out.println(body.getUsername()+" "+body.getPassword());//"Registration Failed","Please Enter all fields"
+//
+//		if(body.getEmail()==null||body.getPassword()==null) {
+//			return new LoginResponseAdminDTO(new ApplicationAdmin(0,"Login Failed","Please Fill All Details","",false,null,null),"");
+//		}
+//		return authenticationService.loginAdmin(body);
+//	}
 
 	@PostMapping("/logout")
 	public ResponceDTO logout(@RequestParam("email") String email) {

@@ -41,7 +41,7 @@ public class Timing {
 		super();
 	}
 
-	public Timing(Integer timeId, LocalDate date, LocalTime startTime, LocalTime endTime, Integer availableSeats,
+	public Timing(Integer timeId, LocalDate date, LocalTime startTime, LocalTime endTime, Integer availableSeats,Integer reserveSeats,
 			Integer movieId) {
 		super();
 		this.timeId = timeId;
@@ -49,7 +49,17 @@ public class Timing {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.availableSeats = availableSeats;
+		this.reserveSeats=reserveSeats;
 		this.movieId = movieId;
+	}
+
+	
+	public Integer getReserveSeats() {
+		return reserveSeats;
+	}
+
+	public void setReserveSeats(Integer reserveSeats) {
+		this.reserveSeats = reserveSeats;
 	}
 
 	public Integer getTimeId() {

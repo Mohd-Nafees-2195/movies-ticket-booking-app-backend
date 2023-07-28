@@ -30,7 +30,7 @@ public class TicketServicesApplication {
 	
 	
 	@Bean
-	CommandLineRunner run(RoleRepository roleRepository,AdminRepository adminRepository,PasswordEncoder passwordEncoder,AdminTokenRepository tokensRepository) {
+	CommandLineRunner run(RoleRepository roleRepository,UserRepository userRepository,PasswordEncoder passwordEncoder,TokensRepository tokensRepository) {
 		return args ->{
 			if(roleRepository.findByAuthority("ADMIN").isPresent())
 				return;
@@ -41,9 +41,9 @@ public class TicketServicesApplication {
 			
 			Set<Role> roles=new HashSet<>();
 			roles.add(adminRole);
-			AdminTokens token=tokensRepository.save(new AdminTokens(0,null,null,null,null,null,null));
-			ApplicationAdmin admin=new ApplicationAdmin(1,"admin","admin@gmail.com",passwordEncoder.encode("Abcd@1234"),false,token,roles);
-			adminRepository.save(admin);
+			UserTokens token=tokensRepository.save(new UserTokens(0,null,null,null,null,null,null));
+			ApplicationUser admin=new ApplicationUser(1,"admin","admin@gmail.com",passwordEncoder.encode("Abcd@1234"),false,token,roles);
+			userRepository.save(admin);
 		};
 	}
 }

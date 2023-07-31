@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -57,11 +58,12 @@ public class UserConfiguration {
 	@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
     	 http.csrf(csrf->csrf.disable())
+    	        .cors(Customizer.withDefaults())
     			.authorizeHttpRequests(auth -> {
     				auth.requestMatchers("/auth/**").permitAll();
     				auth.requestMatchers("/admin/**").hasRole("ADMIN");
     				auth.requestMatchers("/user/**").hasAnyRole("ADMIN","USER");
-    				auth.anyRequest().authenticated();
+    				//auth.anyRequest().authenticated();
     			});
 
     	  http.oauth2ResourceServer()
@@ -72,7 +74,43 @@ public class UserConfiguration {
 
     	  return http.build();
     }
-
+	
+	
+//	@Bean
+//	CorsConfigurationSource corsConfigurationSource() {
+//	    CorsConfiguration configuration = new CorsConfiguration();
+//	    configuration.setAllowedOrigins(Arrays.asList("*"));
+//	    configuration.setAllowedMethods(Arrays.asList("*"));
+//	    configuration.setAllowedHeaders(Arrays.asList("*"));
+//	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//	    source.registerCorsConfiguration("/**", configuration);
+//	    return source;
+//	}
+	
+//	@Bean
+//	public FilterRegistrationBean<CorsFilter> coresFilter() {
+//		
+//		
+//		CorsConfiguration corsConfiguration=new CorsConfiguration();
+//		corsConfiguration.setAllowCredentials(true);
+//		corsConfiguration.addAllowedOriginPattern("*");
+//		corsConfiguration.addAllowedHeader("Authorization");
+//		corsConfiguration.addAllowedHeader("Content-Type");
+//		corsConfiguration.addAllowedHeader("Accept");
+//		corsConfiguration.addAllowedHeader("POST");
+//		corsConfiguration.addAllowedHeader("GET");
+//		corsConfiguration.addAllowedHeader("DELETE");
+//		corsConfiguration.addAllowedHeader("PUT");
+//		corsConfiguration.addAllowedHeader("OPTIONS");
+//		corsConfiguration.setMaxAge(3600L);
+//		
+//		UrlBasedCorsConfigurationSource source=new UrlBasedCorsConfigurationSource();
+//		source.registerCorsConfiguration("/**", corsConfiguration);
+//		//CorsFilter corsFilter = new CorsFilter(source);
+//		//FilterRegistrationBean<CorsFilter> bean=new FilterRegistrationBean<CorsFilter>(new CorsFilter(source));
+//		//return bean;
+//	}
+	
 	@Bean
 	public JwtDecoder jwtDecoder() {
 		return NimbusJwtDecoder.withPublicKey(keys.getPublicKey()).build();

@@ -1,8 +1,13 @@
 package com.movies.ticketServices.Services;
 
 
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.movies.ticketServices.Model.ApplicationUser;
 import com.movies.ticketServices.Model.Movies;
+import com.movies.ticketServices.Model.Theatres;
 import com.movies.ticketServices.Model.Tickets;
 import com.movies.ticketServices.Model.Timing;
 import com.movies.ticketServices.Model.DTO.ResponceDTO;
 import com.movies.ticketServices.Model.DTO.TicketDTO;
 import com.movies.ticketServices.Repository.MoviesRepository;
+import com.movies.ticketServices.Repository.TheatresRepository;
 import com.movies.ticketServices.Repository.TicketsRepository;
 import com.movies.ticketServices.Repository.TimingRepository;
 import com.movies.ticketServices.Repository.UserRepository;
@@ -40,6 +47,9 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private TicketsRepository ticketsRepository;
+	
+	@Autowired
+	private TheatresRepository theatresRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -51,8 +61,33 @@ public class UserService implements UserDetailsService {
 	}
 	
 	//Get All Movies
-	public Iterable<Movies> getAllMovies(Integer start, Integer end){
-		return moviesRepository.findAll(PageRequest.of(start, end - start + 1)).getContent();
+	//@Query("")
+	public Iterable<Movies>  getAllMovies(Integer start, Integer end){
+		//return moviesRepository.findAll(PageRequest.of(start, end)).getContent();
+		return moviesRepository.findAll();
+	}
+	
+	//Get Particular movie by id
+	public Movies getMovie(Integer movieId) {
+		if(movieId==null)
+			 return null;
+		try {
+			return moviesRepository.findById(movieId).get();
+		}catch(NoSuchElementException e) {
+			return null;
+		}
+		
+	}
+	
+	
+	public Iterable<Timing> getTiming(Integer movieId) {
+		if(movieId==null)
+			 return null;
+		try {
+			return timeRepository.findAllByMovieId(movieId);
+		}catch(NoSuchElementException e) {
+			return null;
+		}
 	}
 	
 	//Create Ticket
@@ -79,7 +114,8 @@ public class UserService implements UserDetailsService {
 				ticket.setEndTime(time.getEndTime());
 				
 				timeRepository.save(time);
-				ticketsRepository.save(newTicket);
+				Tickets storedTicket=ticketsRepository.save(newTicket);
+				ticket.setTicketId(storedTicket.getTicketId());
 				return ticket;
 			}
 			
@@ -88,7 +124,28 @@ public class UserService implements UserDetailsService {
 			return ticket;
 		}
 		
+	}
+	
+	//Get Ticket
+	public Tickets getTicket(Integer ticketId) {
+		if(ticketId==null)
+			 return null;
+		try {
+			return ticketsRepository.findById(ticketId).get();
+		}catch(NoSuchElementException e) {
+			return null;
+		}
 		
-		
+	}
+	
+	//get Theater
+	public Theatres getTheater(Integer theaterId) {
+		if(theaterId==null)
+			return null;
+		try {
+			return theatresRepository.findById(theaterId).get();
+		}catch(Exception e) {
+			return null;
+		}
 	}
 }

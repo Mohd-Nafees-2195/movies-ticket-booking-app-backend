@@ -5,6 +5,7 @@ import java.time.LocalTime;
 
 public class TicketDTO {
   
+	private Integer ticketId;
 	private String email;
 	private LocalDate date;
 	private LocalTime startTime;
@@ -16,9 +17,10 @@ public class TicketDTO {
 	public TicketDTO() {
 		super();
 	}
-	public TicketDTO(String email, LocalDate date, LocalTime startTime, LocalTime endTime, Integer seatNumber,
+	public TicketDTO(Integer ticketId,String email, LocalDate date, LocalTime startTime, LocalTime endTime, Integer seatNumber,
 			Integer movieId,Integer timeId) {
 		super();
+		this.ticketId=ticketId;
 		this.email = email;
 		this.date = date;
 		this.startTime = startTime;
@@ -29,6 +31,12 @@ public class TicketDTO {
 	}
 	
 	
+	public Integer getTicketId() {
+		return ticketId;
+	}
+	public void setTicketId(Integer ticketId) {
+		this.ticketId = ticketId;
+	}
 	public Integer getTimeId() {
 		return timeId;
 	}

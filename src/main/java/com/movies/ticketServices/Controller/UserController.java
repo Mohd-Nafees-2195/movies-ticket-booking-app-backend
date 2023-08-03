@@ -1,5 +1,7 @@
 package com.movies.ticketServices.Controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.movies.ticketServices.Model.Movies;
+import com.movies.ticketServices.Model.Theatres;
+import com.movies.ticketServices.Model.Tickets;
+import com.movies.ticketServices.Model.Timing;
 import com.movies.ticketServices.Model.DTO.TicketDTO;
 import com.movies.ticketServices.Services.UserService;
 
@@ -31,6 +36,16 @@ public class UserController {
 		return userService.getAllMovies(start,end);
 	}
 	
+	@GetMapping("/get-movie")
+	public Movies getMovie(@RequestParam Integer id) {
+		return userService.getMovie(id);
+	}
+	
+	@GetMapping("/get-timing")
+	public Iterable<Timing> getTiming(@RequestParam Integer id) {
+		return userService.getTiming(id);
+	}
+	
 	@PostMapping("/create-ticket")
 	public TicketDTO createTicket(@RequestBody TicketDTO ticket) {
 		if(ticket.getEmail()==null||ticket.getMovieId()==null||ticket.getTimeId()==null) {
@@ -38,5 +53,16 @@ public class UserController {
 		}else {
 			return userService.createTicket(ticket);
 		}
+	}
+	
+	@GetMapping("/get-ticket")
+	public Tickets getTicket(@RequestParam Integer id) {
+		System.out.println("id = "+id);
+		return userService.getTicket(id);
+	}
+	
+	@GetMapping("/get-theater")
+	public Theatres getTheater(@RequestParam Integer id) {
+		return userService.getTheater(id);
 	}
 }

@@ -1,5 +1,6 @@
 package com.movies.ticketServices.Repository;
 
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +10,5 @@ import com.movies.ticketServices.Model.Movies;
 public interface MoviesRepository extends JpaRepository<Movies, Integer> {
 
 //	Optional<Movies> fineAllMovies();
+	//List<Movies> findAllByOrderByIdAsc(PageRequest pageRequest);
 }

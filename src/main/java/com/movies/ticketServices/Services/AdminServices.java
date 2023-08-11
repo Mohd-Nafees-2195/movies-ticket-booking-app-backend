@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.movies.ticketServices.Model.ApplicationAdmin;
 import com.movies.ticketServices.Model.ApplicationUser;
@@ -48,7 +50,7 @@ public class AdminServices  {
 				System.out.println(theater.getEmail()+"  "+theater.getTheatreCity()+"  "+theater.getTotalSeats()+" "+theater.getTheatreName());
 				Theatres newTheatre=new Theatres(0,theater.getTheatreName(),theater.getTheatreCity(),theater.getTotalSeats(),admin.getUserId());
 				theatresRepository.save(newTheatre);
-				return new ResponceDTO("Failed!!","Theatre Added Successfully");
+				return new ResponceDTO("Success!!","Theatre Added Successfully");
 			}else {
 				return new ResponceDTO("Failed!!","Invalid Access");
 			}
@@ -67,10 +69,10 @@ public class AdminServices  {
 				ApplicationUser admin=userRepository.findByEmail(newMovie.getEmail()).get();
 				if(admin==null)
 					return new ResponceDTO("Failed!!","wrong email");
-				Theatres theater=theatresRepository.findById(admin.getUserId()).get();
+				Theatres theater=theatresRepository.findById(newMovie.getTheaterId()).get();
 				if(theater!=null) {
 					
-					Movies movie=new Movies(0,newMovie.getMovieName(),newMovie.getMovieTitle(),theater.getTheatreId(),imageData);
+					Movies movie=new Movies(0,newMovie.getMovieName(),newMovie.getMovieTitle(),theater.getTheatreId(),newMovie.getPrice(),imageData);
 					Movies movieResponse=moviesRepository.save(movie);
 					if(movieResponse!=null) {
 					
@@ -120,5 +122,85 @@ public class AdminServices  {
 				return new ResponceDTO("Failed!!","Something Went Wrong");
 			}
 		}
+	
+	
+	//Get All Movies
+	 @Transactional
+	public Iterable<Movies> getAllMovies(Integer theaterId){
+		System.out.println("Admin Controller"+theaterId);
+		return moviesRepository.findAllByTheaterId(theaterId);
+	}
+	 
+	//Get all theater
+	public Iterable<Theatres> getAllTheaters(Integer adminId){
+		return theatresRepository.getAllTheaterById(adminId);
+	}
+	
+	//Delete Movie
+	@Transactional
+	public ResponceDTO deleteMovie(Integer movieId) {
+		try {
+			timingRepository.deleteByMovieId(movieId);
+			System.out.println("After Deleting from time table");
+			moviesRepository.deleteById(movieId);
+			return new ResponceDTO("Success!!","Movie Deleted Successfully");
+		}catch(Exception e) {
+			return new ResponceDTO("Failed!!",e.getMessage());
+		}
+	}
+	
+	//delete Theater
+	public ResponceDTO deleteTheater(Integer theaterId) {
+		try {
+			theatresRepository.deleteById(theaterId);
+			return new ResponceDTO("Success!!","Theater Deleted Successfully");
+		}catch(Exception e) {
+			return new ResponceDTO("Failed!!",e.getMessage());
+		}
+	}
+	
+	//Get Single Theater
+	public Theatres getTheater(Integer theaterId) {
+		try {
+			return theatresRepository.findById(theaterId).get();
+		}catch(Exception e) {
+			return null;
+		}
+	}
+	
+	//Update Theater
+	public ResponceDTO updateTheater(Integer theaterId,TheatreDTO theater) {
+		try {
+			
+			Theatres data=theatresRepository.findById(theaterId).get();
+			if(data!=null) {
+				data.setTheatreCity(theater.getTheatreCity());
+				data.setTheatrename(theater.getTheatreName());
+				data.setTotalSeats(theater.getTotalSeats());
+				theatresRepository.save(data);
+				return new ResponceDTO("Success!!","Theater Updated Successfully");
+			}else {
+				return new ResponceDTO("Failed!!","Something went wrong");
+			}
+			
+			
+		}catch(Exception e) {
+			return new ResponceDTO("Failed!!",e.getMessage());
+		}
+	}
+	
+	//Update Movie
+	public ResponceDTO updateMovie(Movies data) {
+		try {
+			 moviesRepository.save(data);
+			 return new ResponceDTO("Success!!","Theater Updated Successfully");
+		}catch(Exception e) {
+			return new ResponceDTO("Failed!!",e.getMessage());
+		}
+	}
+	
+	public ApplicationUser getUser(String email) {
+		return userRepository.findByEmail(email).get();
+	}
 	
 }

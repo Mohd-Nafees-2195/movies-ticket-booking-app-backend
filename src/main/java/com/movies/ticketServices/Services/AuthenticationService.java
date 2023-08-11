@@ -163,11 +163,14 @@ public class AuthenticationService {
 					);
 
 
+			
 			String token=tokenService.generateJwt(auth);
 			user.setIsEmailVerified(true);
+			
 			userRepository.save(user);
+			
 			saveJWTTokens(token,user);
-
+			System.out.println("After Authentication");
 			return new LoginResponseDTO(userRepository.findByEmail(body.getEmail()).get(),token);
 
 		}catch(NoSuchElementException e) {

@@ -138,6 +138,15 @@ public class UserService implements UserDetailsService {
 		
 	}
 	
+	//Get All Tickets
+	public Iterable<Tickets> getAllTickets(Integer userId){
+		try {
+			return ticketsRepository.findAllByUserId(userId);
+		}catch(Exception e) {
+			return null;
+		}
+	}
+	
 	//get Theater
 	public Theatres getTheater(Integer theaterId) {
 		if(theaterId==null)
@@ -147,5 +156,15 @@ public class UserService implements UserDetailsService {
 		}catch(Exception e) {
 			return null;
 		}
+	}
+	
+	//Get search movie
+	@Transactional
+	public Iterable<Movies> searchByTitleLike(String title){
+		return moviesRepository.searchByTitleLike(title);
+	}
+	
+	public ApplicationUser getUser(String email) {
+		return userRepository.findByEmail(email).get();
 	}
 }

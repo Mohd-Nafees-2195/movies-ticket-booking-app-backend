@@ -2,8 +2,10 @@ package com.movies.ticketServices.Model.DTO;
 
 public class MoviesDTO {
 
+	 private Integer theaterId;
 	 private String movieName;
 	 private String movieTitle;
+	 private double price;
 	 private String email;
 	 
 	 
@@ -11,15 +13,32 @@ public class MoviesDTO {
 		super();
 	}
 	
-	
-	
-	
-	
-	public MoviesDTO(String movieName, String movieTitle,String email) {
+	public MoviesDTO(Integer theaterId,String movieName, String movieTitle,double price,String email) {
 		super();
+		this.theaterId=theaterId;
 		this.movieName = movieName;
 		this.movieTitle = movieTitle;
+		this.price=price;
 		this.email=email;
+	}
+	
+	
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public Integer getTheaterId() {
+		return theaterId;
+	}
+
+
+	public void setTheaterId(Integer theaterId) {
+		this.theaterId = theaterId;
 	}
 
 	public String getEmail() {

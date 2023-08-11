@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.movies.ticketServices.Model.ApplicationUser;
 import com.movies.ticketServices.Model.Movies;
 import com.movies.ticketServices.Model.Theatres;
 import com.movies.ticketServices.Model.Tickets;
@@ -61,8 +62,29 @@ public class UserController {
 		return userService.getTicket(id);
 	}
 	
+	@GetMapping("/get-all-tickets")
+	public Iterable<Tickets> getAllTickets(@RequestParam("id") Integer userId){
+		if(userId<=0 || userId==null)
+			return null;
+		return userService.getAllTickets(userId);
+	}
+	
 	@GetMapping("/get-theater")
 	public Theatres getTheater(@RequestParam Integer id) {
 		return userService.getTheater(id);
+	}
+	
+	@GetMapping("/get-searched-movies")
+	public Iterable<Movies> searchByTitleLike(@RequestParam("title") String title){
+		if(title==null||title=="") {
+			System.out.println("dhjkfs jdnids dijoisd ");
+			return null;
+		}
+		return userService.searchByTitleLike(title);
+	}
+	
+	@GetMapping("/get-user")
+	public ApplicationUser getUser(@RequestParam("email") String email) {
+		return userService.getUser(email);
 	}
 }
